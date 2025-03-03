@@ -6,16 +6,21 @@ import re
 from integrations.google_genai_integration import fetch_travel_recommendations
 from utils.images_helper import fetch_destination_images
 
-# Load environment variables
-load_dotenv()
+# Load environment variables (Force override)
+load_dotenv(override=True)
 
-# Load API keys from .env
-GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
-UNSPLASH_API_KEY = os.getenv("UNSPLASH_API_KEY")
-GENAI_API_KEY = os.getenv("GENAI_API_KEY")
+# Load API keys
+GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY", "")
+UNSPLASH_API_KEY = os.getenv("UNSPLASH_API_KEY", "")
+GENAI_API_KEY = os.getenv("GENAI_API_KEY", "")
+
+# Debugging: Print to confirm loading (remove in production)
+print("GOOGLE_API_KEY loaded:", bool(GOOGLE_API_KEY))
+print("UNSPLASH_API_KEY loaded:", bool(UNSPLASH_API_KEY))
+print("GENAI_API_KEY loaded:", bool(GENAI_API_KEY))
 
 # Currency Exchange Rate
-USD_TO_INR = 83  # 1 USD = 83 INR
+USD_TO_INR = 83
 
 def convert_prices_to_inr(recommendations):
     """Convert prices in USD to INR."""
@@ -26,34 +31,8 @@ def convert_prices_to_inr(recommendations):
 
     return re.sub(r"\$(\d+(\.\d+)?)", convert_price, recommendations)
 
-def get_google_search_link(mode, source, destination):
-    """Generate Google search link for travel mode."""
-    query = f"{mode} from {source} to {destination}".replace(" ", "+")
-    return f"[Search {mode}s](https://www.google.com/search?q={query})"
-
-def display_travel_options_table(source, destination):
-    """Display travel options table."""
-    travel_options = [
-        {"Mode of Transport": "Flight", "Estimated Cost": "Varies", "Estimated Duration": "Varies", "Booking": get_google_search_link("flight", source, destination)},
-        {"Mode of Transport": "Train", "Estimated Cost": "Varies", "Estimated Duration": "Varies", "Booking": get_google_search_link("train", source, destination)},
-        {"Mode of Transport": "Bus", "Estimated Cost": "Varies", "Estimated Duration": "Varies", "Booking": get_google_search_link("bus", source, destination)},
-        {"Mode of Transport": "Cab", "Estimated Cost": "Varies", "Estimated Duration": "Varies", "Booking": get_google_search_link("cab", source, destination)},
-    ]
-
-    st.table(travel_options)
-
-def display_hotels_table():
-    """Display hotels table."""
-    hotels = [
-        {"Name": "Hotel Rambagh Palace", "Type": "Luxury", "Price per Night": "₹20,000+", "Rating": "4.8"},
-        {"Name": "Zostel Jaipur", "Type": "Budget", "Price per Night": "₹1,000 - ₹3,000", "Rating": "4.2"},
-        {"Name": "Shahpura House", "Type": "Heritage", "Price per Night": "₹5,000 - ₹10,000", "Rating": "4.5"},
-    ]
-
-    st.table(hotels)
-
 def main():
-    st.title("AI Travel Planner ✈️ 🌍 ")
+    st.title("AI Travel Planner ✈️ 🌍")
 
     source = st.text_input("📍 Enter Source Location", key="source_location")
     destination = st.text_input("📍 Enter Destination Location", key="destination_location")
@@ -65,11 +44,10 @@ def main():
     budget = st.selectbox("💰 Budget Range", ["Budget", "Standard", "Luxury"], key="budget")
     time = st.selectbox("⏰ Preferred Time to Travel", ["Morning", "Afternoon", "Evening", "Night"], key="time")
     travelers = st.number_input("👥 Number of Travelers", min_value=1, key="travelers")
-
     currency = st.selectbox("💱 Preferred Currency", ["USD ($)", "INR (₹)"], key="currency")
 
     if st.button("🎒 Plan My Trip"):
-        if not all([source, destination, GOOGLE_API_KEY, UNSPLASH_API_KEY, GENAI_API_KEY]):
+        if not source or not destination or not GOOGLE_API_KEY or not UNSPLASH_API_KEY or not GENAI_API_KEY:
             st.error("⚠️ Please fill all fields and set your API keys in `.env` file.")
             return
 
