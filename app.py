@@ -10,7 +10,7 @@ from utils.images_helper import fetch_destination_images
 load_dotenv()
 
 # Load API keys from .env
-GENAI_API_KEY = os.getenv("GENAI_API_KEY")
+GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 UNSPLASH_API_KEY = os.getenv("UNSPLASH_API_KEY")
 
 # Currency Exchange Rate (Static - can be fetched via API if needed)
@@ -73,7 +73,7 @@ def main():
     currency = st.selectbox("💱 Preferred Currency", ["USD ($)", "INR (₹)"], key="currency")
 
     if st.button("🎒 Plan My Trip"):
-        if not all([source, destination, GENAI_API_KEY, UNSPLASH_API_KEY]):
+        if not all([source, destination, GOOGLE_API_KEY, UNSPLASH_API_KEY]):
             st.error("⚠️ Please fill all fields and set your API keys in `.env` file.")
             return
 
