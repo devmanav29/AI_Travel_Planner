@@ -27,7 +27,7 @@ def convert_prices_to_inr(recommendations):
     return re.sub(r"\$(\d+(\.\d+)?)", convert_price, recommendations)
 
 def main():
-    st.title("AI Travel Planner ✈️ 🌍")
+    st.title("✨ AI Travel Planner – Your Smart Travel Companion! ✈️ 🌍")
 
     source = st.text_input("📍 Enter Source Location", key="source_location")
     destination = st.text_input("📍 Enter Destination Location", key="destination_location")
