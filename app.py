@@ -14,11 +14,6 @@ GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY", "")
 UNSPLASH_API_KEY = os.getenv("UNSPLASH_API_KEY", "")
 GENAI_API_KEY = os.getenv("GENAI_API_KEY", "")
 
-# Debugging: Print to confirm loading (remove in production)
-print("GOOGLE_API_KEY loaded:", bool(GOOGLE_API_KEY))
-print("UNSPLASH_API_KEY loaded:", bool(UNSPLASH_API_KEY))
-print("GENAI_API_KEY loaded:", bool(GENAI_API_KEY))
-
 # Currency Exchange Rate
 USD_TO_INR = 83
 
