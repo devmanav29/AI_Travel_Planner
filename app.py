@@ -12,10 +12,10 @@ load_dotenv()
 # Load API keys from .env
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 UNSPLASH_API_KEY = os.getenv("UNSPLASH_API_KEY")
+GENAI_API_KEY = os.getenv("GENAI_API_KEY")
 
-# Currency Exchange Rate (Static - can be fetched via API if needed)
-USD_TO_INR = 83  # 1 USD = 83 INR (update if needed)
-
+# Currency Exchange Rate
+USD_TO_INR = 83  # 1 USD = 83 INR
 
 def convert_prices_to_inr(recommendations):
     """Convert prices in USD to INR."""
@@ -26,15 +26,13 @@ def convert_prices_to_inr(recommendations):
 
     return re.sub(r"\$(\d+(\.\d+)?)", convert_price, recommendations)
 
-
 def get_google_search_link(mode, source, destination):
     """Generate Google search link for travel mode."""
     query = f"{mode} from {source} to {destination}".replace(" ", "+")
     return f"[Search {mode}s](https://www.google.com/search?q={query})"
 
-
 def display_travel_options_table(source, destination):
-    """Display single clean travel options table with booking links."""
+    """Display travel options table."""
     travel_options = [
         {"Mode of Transport": "Flight", "Estimated Cost": "Varies", "Estimated Duration": "Varies", "Booking": get_google_search_link("flight", source, destination)},
         {"Mode of Transport": "Train", "Estimated Cost": "Varies", "Estimated Duration": "Varies", "Booking": get_google_search_link("train", source, destination)},
@@ -44,9 +42,8 @@ def display_travel_options_table(source, destination):
 
     st.table(travel_options)
 
-
 def display_hotels_table():
-    """Display single clean hotels table (no booking link)."""
+    """Display hotels table."""
     hotels = [
         {"Name": "Hotel Rambagh Palace", "Type": "Luxury", "Price per Night": "₹20,000+", "Rating": "4.8"},
         {"Name": "Zostel Jaipur", "Type": "Budget", "Price per Night": "₹1,000 - ₹3,000", "Rating": "4.2"},
@@ -55,9 +52,8 @@ def display_hotels_table():
 
     st.table(hotels)
 
-
 def main():
-    st.title("🌍 AI Travel Planner")
+    st.title("AI Travel Planner ✈️ 🌍 ")
 
     source = st.text_input("📍 Enter Source Location", key="source_location")
     destination = st.text_input("📍 Enter Destination Location", key="destination_location")
@@ -73,7 +69,7 @@ def main():
     currency = st.selectbox("💱 Preferred Currency", ["USD ($)", "INR (₹)"], key="currency")
 
     if st.button("🎒 Plan My Trip"):
-        if not all([source, destination, GOOGLE_API_KEY, UNSPLASH_API_KEY]):
+        if not all([source, destination, GOOGLE_API_KEY, UNSPLASH_API_KEY, GENAI_API_KEY]):
             st.error("⚠️ Please fill all fields and set your API keys in `.env` file.")
             return
 
@@ -96,11 +92,6 @@ def main():
 
         st.subheader("✨ Travel Recommendations")
         st.markdown(recommendations)
-
-        
-
-        
-
 
 if __name__ == "__main__":
     main()
